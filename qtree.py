@@ -38,36 +38,38 @@ class qtree:
                 return True
     
     def subdivide(self):
+        bx = self.bounds.x
+        by = self.bounds.y
         bw = self.bounds.w
         bh = self.bounds.h
 
         top_left_area = Rectangle(
-            x=0,
-            y=0,
+            x=bx,
+            y=by,
             w=bw / 2,
             h=bh / 2
         )
         self.top_left = qtree(top_left_area, self.capacity)
 
         top_right_area = Rectangle(
-            x=bw / 2,
-            y=0,
+            x=bx + bw / 2,
+            y=by,
             w=bw / 2,
             h=bh / 2
         )
         self.top_right = qtree(top_right_area, self.capacity)
 
         bottom_left_area = Rectangle(
-            x=0,
-            y=bh / 2,
+            x=bx,
+            y=by + bh / 2,
             w=bw / 2,
             h=bh / 2
         )
         self.bottom_left = qtree(bottom_left_area, self.capacity)
 
         bottom_right_area = Rectangle(
-            x=bw / 2,
-            y=bh / 2,
+            x=bx + bw / 2,
+            y=by + bh / 2,
             w=bw / 2,
             h=bh / 2
         )
@@ -94,7 +96,7 @@ class qtree:
         return objects_founded
     
     def debug_fill(self):
-        random.seed(1)
+        random.seed(5)
 
         for x in range(20):
             debug_rect = Rectangle( 
@@ -115,11 +117,14 @@ class qtree:
             8
         )
 
+        pyxel.text(self.bounds.x + self.bounds.w / 2, self.bounds.y + self.bounds.h / 2, str(len(self.objs)), 7)
+
         if self.divided:
             self.top_left.debug_draw()
             self.top_right.debug_draw()
             self.bottom_left.debug_draw()
             self.bottom_right.debug_draw()
 
-        for obj in self.objs:
-            pyxel.rect(obj.x, obj.y, obj.w, obj.h, 3)
+        if config["qtree_debug_obj"]:
+            for obj in self.objs:
+                pyxel.rectb(obj.x, obj.y, obj.w, obj.h, 3)

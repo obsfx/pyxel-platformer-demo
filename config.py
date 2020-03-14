@@ -6,5 +6,6 @@ config = {
     'scale': 2,
     'mouse': True,
     'debug': True,
-    'qtree_debug_fill': True
+    'qtree_debug_fill': False,
+    'qtree_debug_obj': True
 }

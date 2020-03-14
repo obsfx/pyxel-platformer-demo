@@ -25,6 +25,7 @@ class World:
         self.objects.remove(obj)
 
     def update(self):
+
         self.qtree = qtree(
             Rectangle(
                 x=0,
@@ -36,6 +37,9 @@ class World:
         )
 
         for obj in self.objects:
+            if obj.id == "player":
+                print(obj.x, obj.y)
+            
             obj.update()
             self.qtree.insert(obj)
 
@@ -57,7 +61,7 @@ class World:
             h=self.qtree_area["h"]
         )
 
-        self.debug_founded_objs_in_area = self.qtree.query(debug_rect);
+        self.debug_founded_objs_in_area = self.qtree.query(debug_rect)
 
     def debug_draw(self):
         self.qtree.debug_draw()

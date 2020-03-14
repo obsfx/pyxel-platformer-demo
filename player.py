@@ -1,10 +1,11 @@
 import pyxel
 
-from unit import Unit
+from entity import Entity
 
-class Player(Unit):
+class Player(Entity):
     def __init__(self, x, y, w, h):
         super().__init__(x, y, w, h)
+        self.id = "player"
 
     def update(self):
         if pyxel.btn(pyxel.KEY_W):
@@ -18,6 +19,6 @@ class Player(Unit):
 
         if pyxel.btn(pyxel.KEY_A):
             self.x -= 1
-            
+
     def draw(self):
         pyxel.rect(self.x, self.y, self.w, self.h, 15)
