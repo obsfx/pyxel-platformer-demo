@@ -117,8 +117,6 @@ class qtree:
             8
         )
 
-        pyxel.text(self.bounds.x + self.bounds.w / 2, self.bounds.y + self.bounds.h / 2, str(len(self.objs)), 7)
-
         if self.divided:
             self.top_left.debug_draw()
             self.top_right.debug_draw()
@@ -128,3 +126,5 @@ class qtree:
         if config["qtree_debug_obj"]:
             for obj in self.objs:
                 pyxel.rectb(obj.x, obj.y, obj.w, obj.h, 3)
+
+        pyxel.text(self.bounds.x + self.bounds.w / 2, self.bounds.y + self.bounds.h / 2, str(len(self.objs)), 7)

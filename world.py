@@ -37,10 +37,11 @@ class World:
         )
 
         for obj in self.objects:
+            obj.update()
+
             if obj.id == "player":
                 print(obj.x, obj.y)
-            
-            obj.update()
+                
             self.qtree.insert(obj)
 
     def draw(self):

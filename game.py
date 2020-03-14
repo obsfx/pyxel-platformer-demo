@@ -11,17 +11,30 @@ class Game:
     def __init__(self):
         self.world = World()
 
-        self.world.push(Player(30, 30, 20, 20))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
+        self.world.push(Player(30, 30, 10, 10))
 
-        # random.seed(3)
+        random.seed(3)
         random.seed(time.time())
 
-        for x in range(60):
+        for x in range(50):
             self.world.push(Obj(
                 random.randint(0, config["width"]),
                 random.randint(0, config["height"]),
-                10,
-                10
+                15,
+                15
             ))
 
     def update(self):
