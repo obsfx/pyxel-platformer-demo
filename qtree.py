@@ -1,7 +1,7 @@
 import pyxel
 
 from collections import deque, namedtuple
-from utility import AABB
+from utility import AABB_collision
 
 # class centered_rectangle:
 #     def __init__(self, x, y, radius):
@@ -21,7 +21,7 @@ class qtree:
         self.objs = deque()
 
     def insert(self, obj):
-        if not AABB(self.bounds, obj):
+        if not AABB_collision(self.bounds, obj, include_borders=True):
             return False
 
         if len(self.objs) < self.capacity:
@@ -79,6 +79,25 @@ class qtree:
         self.bottom_right = qtree(bottom_right_area, self.capacity)
 
         self.divided = True
+
+    def query(self, area):
+        objects_founded = []
+
+        if not AABB_collision(self.bounds, area):
+            return objects_founded
+
+        for obj in self.objs:
+            if AABB_collision(area, obj, include_borders=True):
+                objects_founded.append(obj)
+
+        if self.divided:
+            objects_founded += self.top_left.query(area)
+            objects_founded += self.top_right.query(area)
+            objects_founded += self.bottom_left.query(area)
+            objects_founded += self.bottom_right.query(area)
+
+        return objects_founded
+
     
     def debug_draw(self):
         pyxel.rectb(
@@ -88,11 +107,11 @@ class qtree:
             self.bounds.h * 2, 8
         )
 
-        for obj in self.objs:
-            pyxel.rect(obj.x, obj.y, obj.w, obj.h, 3)
-
         if self.divided:
             self.top_left.debug_draw()
             self.top_right.debug_draw()
             self.bottom_left.debug_draw()
             self.bottom_right.debug_draw()
+
+        for obj in self.objs:
+            pyxel.rect(obj.x, obj.y, obj.w, obj.h, 3)
