@@ -5,5 +5,6 @@ config = {
     'fps': 50,
     'scale': 2,
     'mouse': True,
-    'debug': True
+    'debug': True,
+    'qtree_debug_fill': True
 }

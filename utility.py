@@ -11,15 +11,15 @@ def AABB_collision(objA, objB, include_borders=False):
 
     if include_borders:
         return (
-            A.x + A.w >= B.x - B.w and
-            A.x - A.w <= B.x + B.w and
-            A.y + A.h >= B.y - B.h and
-            A.y - A.h <= B.y + B.h
+            A.x + A.w >= B.x and
+            A.x <= B.x + B.w and
+            A.y + A.h >= B.y and
+            A.y <= B.y + B.h
         )
 
     return (
-        A.x + A.w > B.x - B.w and
-        A.x - A.w < B.x + B.w and
-        A.y + A.h > B.y - B.h and
-        A.y - A.h < B.y + B.h
+        A.x + A.w > B.x and
+        A.x < B.x + B.w and
+        A.y + A.h > B.y and
+        A.y < B.y + B.h
     )

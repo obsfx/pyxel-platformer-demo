@@ -24,14 +24,8 @@ class App:
     def update(self):
         self.game.update()
 
-        if config['debug']:
-            self.game.debug_update()
-
     def draw(self):
         pyxel.cls(0)
         self.game.draw()
-
-        if config['debug']:
-            self.game.debug_draw()
 
 App()

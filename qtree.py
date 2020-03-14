@@ -6,7 +6,7 @@ from config import config
 from collections import deque, namedtuple
 from utility import AABB_collision
 
-CenteredRectangle = namedtuple("CenteredRectangle", ["x", "y", "w", "h"])
+Rectangle = namedtuple("Rectangle", ["x", "y", "w", "h"])
 
 class qtree:
     def __init__(self, bounds, capacity):
@@ -38,38 +38,36 @@ class qtree:
                 return True
     
     def subdivide(self):
-        bx = self.bounds.x
-        by = self.bounds.y
         bw = self.bounds.w
         bh = self.bounds.h
 
-        top_left_area = CenteredRectangle(
-            x=bx - bw / 2,
-            y=by - bh / 2,
+        top_left_area = Rectangle(
+            x=0,
+            y=0,
             w=bw / 2,
             h=bh / 2
         )
         self.top_left = qtree(top_left_area, self.capacity)
 
-        top_right_area = CenteredRectangle(
-            x=bx + bw / 2,
-            y=by - bh / 2,
+        top_right_area = Rectangle(
+            x=bw / 2,
+            y=0,
             w=bw / 2,
             h=bh / 2
         )
         self.top_right = qtree(top_right_area, self.capacity)
 
-        bottom_left_area = CenteredRectangle(
-            x=bx - bw / 2,
-            y=by + bh / 2,
+        bottom_left_area = Rectangle(
+            x=0,
+            y=bh / 2,
             w=bw / 2,
             h=bh / 2
         )
         self.bottom_left = qtree(bottom_left_area, self.capacity)
 
-        bottom_right_area = CenteredRectangle(
-            x=bx + bw / 2,
-            y=by + bh / 2,
+        bottom_right_area = Rectangle(
+            x=bw / 2,
+            y=bh / 2,
             w=bw / 2,
             h=bh / 2
         )
@@ -96,24 +94,25 @@ class qtree:
         return objects_founded
     
     def debug_fill(self):
-        random.seed(time.time())
+        random.seed(1)
 
-        for x in range(1500):
-            debug_rect = CenteredRectangle( 
+        for x in range(20):
+            debug_rect = Rectangle( 
                 x=random.randint(0, config['width']),
                 y=random.randint(0, config['height']),
-                w=1,
-                h=1
+                w=15,
+                h=15
             )
 
             self.insert(debug_rect);
     
     def debug_draw(self):
         pyxel.rectb(
-            self.bounds.x - self.bounds.w, 
-            self.bounds.y - self.bounds.h, 
-            self.bounds.w * 2, 
-            self.bounds.h * 2, 8
+            self.bounds.x, 
+            self.bounds.y, 
+            self.bounds.w, 
+            self.bounds.h, 
+            8
         )
 
         if self.divided:
