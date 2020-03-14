@@ -79,7 +79,7 @@ class qtree:
 
         bottom_right_area = CenteredRectangle(
             x=bx + bw / 2,
-            y=by - bh / 2,
+            y=by + bh / 2,
             w=bw / 2,
             h=bh / 2
         )
