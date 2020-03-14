@@ -1,13 +1,10 @@
 import pyxel
+import random
+import time
 
+from config import config
 from collections import deque, namedtuple
 from utility import AABB_collision
-
-# class centered_rectangle:
-#     def __init__(self, x, y, radius):
-#         self.x = x
-#         self.y = y
-#         self.radius = radius
 
 CenteredRectangle = namedtuple("CenteredRectangle", ["x", "y", "w", "h"])
 
@@ -97,7 +94,19 @@ class qtree:
             objects_founded += self.bottom_right.query(area)
 
         return objects_founded
+    
+    def debug_fill(self):
+        random.seed(time.time())
 
+        for x in range(1500):
+            debug_rect = CenteredRectangle( 
+                x=random.randint(0, config['width']),
+                y=random.randint(0, config['height']),
+                w=1,
+                h=1
+            )
+
+            self.insert(debug_rect);
     
     def debug_draw(self):
         pyxel.rectb(
