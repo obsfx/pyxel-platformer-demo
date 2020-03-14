@@ -1,6 +1,7 @@
 import pyxel
 
 from collections import deque, namedtuple
+from utility import AABB
 
 # class centered_rectangle:
 #     def __init__(self, x, y, radius):
@@ -19,16 +20,8 @@ class qtree:
 
         self.objs = deque()
 
-    def is_inside(self, obj):
-        return (
-            obj.x + obj.w >= self.bounds.x - self.bounds.w and
-            obj.x <= self.bounds.x + self.bounds.w and
-            obj.y + obj.h >= self.bounds.y - self.bounds.h and
-            obj.y <= self.bounds.y + self.bounds.h
-        )
-
     def insert(self, obj):
-        if not self.is_inside(obj):
+        if not AABB(self.bounds, obj):
             return False
 
         if len(self.objs) < self.capacity:
