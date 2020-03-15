@@ -7,4 +7,7 @@ class Entity:
 
         self.type = ''
         self.id = ''
+
         self.check_collision = False
+        self.gravity = False
+        self.grounded = True

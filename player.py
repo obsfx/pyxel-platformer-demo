@@ -11,8 +11,12 @@ class Player(Entity):
 
         self.type = e_config['types']['player']
         self.check_collision = True
+        self.gravity = True
+        self.grounded = False
 
         self.speed = 2
+        self.dy = 0.1
+        self.acceleration = 0.01
 
         self.collision_area = {
             'x': self.x - 14,
@@ -49,7 +53,7 @@ class Player(Entity):
 
     def update(self):
         self.key_handling()
-
+        # print(self.x, self.y)
         moved = False
 
         if self.current_directions['up'] and not self.collision_directions['up']:
@@ -68,11 +72,11 @@ class Player(Entity):
             self.x -= self.speed
             moved = True
 
-        if moved:
-            if self.is_colliding:
-                for key in self.current_directions.keys():
-                    if self.current_directions[key]:
-                        self.collision_directions[key] = False
+        # if moved:
+        #     if self.is_colliding:
+        #         for key in self.current_directions.keys():
+        #             if self.current_directions[key]:
+        #                 self.collision_directions[key] = False
 
         # (32 - 8) / 2
         self.collision_area['x'] = self.x - 14
@@ -80,6 +84,8 @@ class Player(Entity):
 
     def draw(self):
         pyxel.rect(self.x, self.y, self.w, self.h, 15)
+        pyxel.text(self.x + self.w / 2, self.y + self.h / 2, str(self.x), 8)
+        pyxel.text(self.x + self.w / 2, self.y + self.h / 2 + 5, str(self.y), 8)
 
         if config['qtree_debug_area']:
             pyxel.rectb(
