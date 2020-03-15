@@ -4,4 +4,5 @@ class Entity:
         self.y = y
         self.w = w
         self.h = h
-        self.id = ""
+        self.type = ''
+        self.id = ''

@@ -15,12 +15,13 @@ class App:
             border_color=0
         )
 
+        pyxel.load('assets/assets.pyxres')
+
         pyxel.mouse(config['mouse'])
 
         self.game = Game()
-
+        
         pyxel.run(self.update, self.draw)
-
     def update(self):
         self.game.update()
 

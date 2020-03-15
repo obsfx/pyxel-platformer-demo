@@ -1,11 +1,13 @@
 import pyxel
 
+from entity_config import e_config
 from entity import Entity
 
 class Player(Entity):
     def __init__(self, x, y, w, h):
         super().__init__(x, y, w, h)
-        self.id = "player"
+
+        self.type = e_config['types']['player']
 
     def update(self):
         if pyxel.btn(pyxel.KEY_W):

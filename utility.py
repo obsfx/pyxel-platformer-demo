@@ -23,3 +23,6 @@ def AABB_collision(objA, objB, include_borders=False):
         A.y + A.h > B.y and
         A.y < B.y + B.h
     )
+
+def get_key(_dict, val):
+    return [key for (key, value) in _dict.items() if value == val]
