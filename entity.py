@@ -4,5 +4,7 @@ class Entity:
         self.y = y
         self.w = w
         self.h = h
+
         self.type = ''
         self.id = ''
+        self.check_collision = False

@@ -109,13 +109,6 @@ class qtree:
             self.insert(debug_rect);
     
     def debug_draw(self):
-        pyxel.rectb(
-            self.bounds.x, 
-            self.bounds.y, 
-            self.bounds.w, 
-            self.bounds.h, 
-            8
-        )
 
         if self.divided:
             self.top_left.debug_draw()
@@ -127,4 +120,12 @@ class qtree:
             for obj in self.objs:
                 pyxel.rectb(obj.x, obj.y, obj.w, obj.h, 3)
 
-        pyxel.text(self.bounds.x + self.bounds.w / 2, self.bounds.y + self.bounds.h / 2, str(len(self.objs)), 7)
+        if config['qtree_debug_bounds']:
+            pyxel.rectb(
+                self.bounds.x, 
+                self.bounds.y, 
+                self.bounds.w, 
+                self.bounds.h, 
+                8
+            )
+            pyxel.text(self.bounds.x + self.bounds.w / 2, self.bounds.y + self.bounds.h / 2, str(len(self.objs)), 7)
