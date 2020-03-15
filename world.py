@@ -23,9 +23,6 @@ class World:
 
     def push(self, obj):
         self.objects.append(obj)
-    
-    def pop(self, obj):
-        self.objects.remove(obj)
 
     def update(self):
         if config['qtree_debug_area']:
@@ -70,6 +67,31 @@ class World:
                     if (obj != obj_in_area and obj_in_area.id in obj.collision_list):
                         if AABB_collision(obj, obj_in_area):
                             print("collision!!")
+                            obj.is_colliding = True
+
+                            for key in obj.current_directions.keys():
+                                if obj.current_directions[key]:
+                                    #obj.current_col_directions[key] = True
+                                    obj.collision_directions[key] = True
+
+                            if obj.collision_directions['up']:
+                                obj.y += obj.speed
+                                obj.collision_directions['up'] = False
+
+                            if obj.collision_directions['down']:
+                                obj.y -= obj.speed
+                                obj.collision_directions['down'] = False
+
+                            if obj.collision_directions['right']:
+                                obj.x -= obj.speed
+                                obj.collision_directions['right'] = False
+
+                            if obj.collision_directions['left']:
+                                obj.x += obj.speed
+                                obj.collision_directions['left'] = False
+
+                            # obj.current_col_direction = obj.current_direction
+                            # obj.collision_direction[obj.current_col_direction] = True
 
                 if config['qtree_debug_area']:
                     self.debug_founded_objs_in_area += objects_in_area
