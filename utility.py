@@ -1,3 +1,8 @@
+import globals
+import random
+
+from particle import Particle
+
 def AABB_collision(objA, objB, include_borders=False):
     A = objA
     B = objB
@@ -26,3 +31,11 @@ def AABB_collision(objA, objB, include_borders=False):
 
 def get_key(_dict, val):
     return [key for (key, value) in _dict.items() if value == val]
+
+def get_sign(val):
+    return val < 0 if -1 else 1
+
+def create_particles(obj, partc):
+    rdy = obj.current_directions['left'] if 1 else -1
+    for x in range(partc):
+        globals.particles.append(Particle(obj.x - obj.sx, obj.y, rdy * random.randint(2, 5) / 10, 9))

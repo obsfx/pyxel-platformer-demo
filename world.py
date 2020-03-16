@@ -1,17 +1,20 @@
 import pyxel
 import math
+import random
 
-from collections import deque
+import globals
 
 from config import config
 from entity_config import e_config
 from qtree import Rectangle, qtree
-from utility import AABB_collision
+from utility import AABB_collision, create_particles
+
+from particle import Particle
 
 class World:
     def __init__(self):
         self.qtree = []
-        self.objects = deque()
+        self.objects = []
         self.gravity = 0.15
 
         if config['debug'] and config['qtree_debug_area']:
@@ -29,6 +32,12 @@ class World:
     def update(self):
         if config['qtree_debug_area']:
             self.debug_founded_objs_in_area = []
+
+        self.objects += globals.bullets
+        globals.bullets = []
+
+        self.objects += globals.particles
+        globals.particles = []
 
         self.qtree = qtree(
             Rectangle(
@@ -101,6 +110,10 @@ class World:
                         if AABB_collision(obj, obj_in_area):
                             #print("collision!!")
                             obj.is_colliding = True
+
+                            if (obj.id == 'Bullet'):
+                                create_particles(obj, 5)
+                                self.objects.remove(obj)
                             
                             dx = obj.x - obj.sx - obj_in_area.x
                             dy = obj.y - obj.dy - obj_in_area.y
@@ -125,47 +138,6 @@ class World:
                             if (deg >= 0 and deg <= 45) or (deg >= 315 and deg <= 360):
                                 # print('right')
                                 collisions['right'] = True
-
-                            # # print(obj.y, ">=", obj_in_area.y + obj_in_area.h - obj.dy)
-                            # if (
-                            #     obj.y >= obj_in_area.y and
-                            #     (
-                            #         (obj_in_area.x + obj_in_area.w <= obj.x + obj.w and obj_in_area.x + obj_in_area.w > obj.x + obj.speed * 3) or
-                            #         (obj_in_area.x + obj.speed < obj.x + obj.w and obj_in_area.x > obj.x)
-                            #     )
-                            # ):
-                            #     print(obj_in_area.x + obj_in_area.w,"<=", obj.x + obj.w, "and", obj_in_area.x + obj_in_area.w, ">", obj.x + obj.speed * 3, " | ", obj_in_area.x + obj.speed, "<", obj.x + obj.w, "and", obj_in_area.x, ">", obj.x)
-                            #     #print(" | ", obj_in_area.x + obj_in_area.w, "<", obj.x + obj.w, "and", obj_in_area.x + obj_in_area.w, ">", obj.x + obj.speed)
-                            #     collisions['up'] = True
-                            #     obj.collision_directions['up'] = True
-                            #     obj.dy *= -1
-
-                            # if obj.y <= obj_in_area.y:
-                            #     collisions['down'] = True
-
-                            # if (
-                            #     obj.x <= obj_in_area.x and
-                            #     (
-                            #         (obj_in_area.y + obj_in_area.h <= obj.y + obj.h and obj_in_area.y + obj_in_area.h >= obj.y) or
-                            #         (obj_in_area.y < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
-                            #     )
-                            # ):
-                            #     collisions['right'] = True
-
-                            # if (
-                            #     obj.x >= obj_in_area.x and
-                            #     (
-                            #         (obj_in_area.y + obj_in_area.h <= int(obj.y + obj.h) and obj_in_area.y + obj_in_area.h >= obj.y) or
-                            #         (obj_in_area.y + obj.speed < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
-                            #     )
-                                
-                            # ):  
-                            #     # print(obj_in_area.y + obj_in_area.h, "<=", int(obj.y + obj.h) - obj.speed * 2, "and", obj_in_area.y + obj_in_area.h, ">=", obj.y)
-                            #     collisions['left'] = True
-
-                            # if collisions['up'] and obj.current_directions['up']:
-                                
-                            #     print('up')
 
                             if collisions['down'] and obj.current_directions['down']:
                                 obj.collision_directions['down'] = True
@@ -193,7 +165,13 @@ class World:
 
                             if collisions['down']:
                                 if obj.gravity and not obj.grounded:
-                                    obj.y -= obj.y % 8
+                                    if obj.id != 'Particle':
+                                        obj.y -= obj.y % 8
+                                    else:
+                                        obj.sx = 0
+                                        obj.check_collision = False
+                                        obj.gravity = False
+
                                     obj.dy -= obj.dy
                                     obj.grounded = True
 
@@ -235,8 +213,8 @@ class World:
 
         if config['qtree_debug_area']:
             pyxel.rectb(
-                self.qtree_area['x'] - self.qtree_area['w'] / 2, 
-                self.qtree_area['y'] - self.qtree_area['h'] / 2, 
+                self.qtree_area['x'] - self.qtree_area['w'] / 2 + globals.camX, 
+                self.qtree_area['y'] - self.qtree_area['h'] / 2 + globals.camY,  
                 self.qtree_area['w'], 
                 self.qtree_area['h'], 
                 11
@@ -244,11 +222,11 @@ class World:
 
             for obj in self.debug_founded_objs_in_area:
                 pyxel.rect(
-                    obj.x, 
-                    obj.y, 
+                    obj.x + globals.camX, 
+                    obj.y + globals.camY, 
                     obj.w, 
                     obj.h, 
                     7
                 )
 
-            pyxel.text(0, 0, str(len(self.debug_founded_objs_in_area)), 12)
+            pyxel.text(0 + globals.camX, 0 + globals.camY, str(len(self.debug_founded_objs_in_area)), 12)

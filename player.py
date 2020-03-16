@@ -1,13 +1,15 @@
 import pyxel
+import globals
 
 from entity_config import e_config
 from config import config
 
-from entity import Entity
+from bullet import Bullet
+from obj import Obj
 
-class Player(Entity):
+class Player(Obj):
     def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+        super().__init__(x, y, w, h, 'Player')
 
         self.type = e_config['types']['player']
         self.check_collision = True
@@ -30,13 +32,6 @@ class Player(Entity):
             'w': 36,
             'h': 36
         }
-
-        # self.ground_area = {
-        #     'x': self.x,
-        #     'y': self.y + 6,
-        #     'w': 8,
-        #     'h': 6
-        # }
 
         self.collision_list = [
             'block1',
@@ -69,7 +64,8 @@ class Player(Entity):
         }
 
         self.pressed = {
-            'e': False
+            'e': False,
+            'space': False
         }
 
         self.locked = {
@@ -77,7 +73,8 @@ class Player(Entity):
             'right': False,
             'up': False,
             'down': False,
-            'e': False
+            'e': False,
+            'space': False
         }
 
     def update(self):
@@ -103,30 +100,27 @@ class Player(Entity):
         if self.current_directions['left'] and not self.collision_directions['left']:
             self.sx = -self.speed
 
+        if self.pressed['space'] and not self.locked['space']:
+            self.locked['space'] = True
+            globals.bullets.append(Bullet(self.x, self.y, -2.5, 2))
+            globals.shake_duration = 0.75
+
         if not self.is_climbing:
             self.x += self.sx
-        # if moved:
-        #     if self.is_colliding:
-        #         for key in self.current_directions.keys():
-        #             if self.current_directions[key]:
-        #                 self.collision_directions[key] = False
 
         # (32 - 8) / 2
         self.collision_area['x'] = self.x - 14
         self.collision_area['y'] = self.y - 14
 
-        # self.ground_area['x'] = self.x
-        # self.ground_area['y'] = self.y + 6
-
     def draw(self):
-        pyxel.rect(self.x, self.y, self.w, self.h, 15)
-        pyxel.text(self.x + self.w / 2, self.y + self.h / 2, str(self.x), 8)
-        pyxel.text(self.x + self.w / 2, self.y + self.h / 2 + 5, str(self.y), 8)
+        pyxel.rect(self.x + globals.camX, self.y + globals.camY, self.w, self.h, 15)
+        pyxel.text(self.x + self.w / 2 + globals.camX, self.y + self.h / 2 + globals.camY, str(self.x), 8)
+        pyxel.text(self.x + self.w / 2 + globals.camX, self.y + self.h / 2 + 5 + globals.camY, str(self.y), 8)
 
         if config['qtree_debug_area']:
             pyxel.rectb(
-                self.collision_area['x'], 
-                self.collision_area['y'], 
+                self.collision_area['x'] + globals.camX, 
+                self.collision_area['y'] + globals.camY, 
                 self.collision_area['w'], 
                 self.collision_area['h'], 
                 11
@@ -146,6 +140,9 @@ class Player(Entity):
 
         if pyxel.btn(pyxel.KEY_E):
             self.pressed['e'] = True
+
+        if pyxel.btn(pyxel.KEY_SPACE):
+            self.pressed['space'] = True
 
         if pyxel.btn(pyxel.KEY_S):
             self.current_directions['down'] = True
@@ -172,6 +169,10 @@ class Player(Entity):
         if pyxel.btnr(pyxel.KEY_E):
             self.pressed['e'] = False
             self.locked['e'] = False
+        
+        if pyxel.btnr(pyxel.KEY_SPACE):
+            self.pressed['space'] = False
+            self.locked['space'] = False
 
     def overlap_action(self, obj, dis):
         # print(obj.id)

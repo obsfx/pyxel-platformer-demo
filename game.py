@@ -2,6 +2,8 @@ import pyxel
 import random
 import time
 
+import globals
+
 from entity_config import tmi
 from config import config
 from utility import get_key
@@ -16,6 +18,7 @@ class Game:
         self.world = World()
 
         self.current_tm = 0
+
         self.tm_offsetX = 32
         self.tm_offsetY = 0
 
@@ -63,6 +66,15 @@ class Game:
 
         self.push_the_objects()
     def update(self):
+
+        if globals.shake_duration > 0:
+            globals.camX = random.randint(-1, 1) + random.randint(-globals.camShakeX, globals.camShakeX)
+            globals.camY = random.randint(-1, 1) + random.randint(-globals.camShakeY, globals.camShakeY)
+            globals.shake_duration -= 0.1
+        else:
+            globals.camX = 0
+            globals.camY = 0
+
         self.world.update()
         self.world.check_collisions()
 
@@ -70,7 +82,7 @@ class Game:
             self.world.debug_update()
 
     def draw(self):
-        pyxel.bltm(0, 0, self.current_tm, self.tm_offsetX, self.tm_offsetY, config['width'], config['height'], 0)
+        pyxel.bltm(globals.camX, globals.camY, self.current_tm, self.tm_offsetX, self.tm_offsetY, config['width'], config['height'], 0)
 
         self.world.draw()
 
