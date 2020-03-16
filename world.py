@@ -91,14 +91,15 @@ class World:
                         if AABB_collision(obj, obj_in_area):
                             #print("collision!!")
                             obj.is_colliding = True
-
                             if (
-                                obj.y >= obj_in_area.y and
+                                obj.y >= obj_in_area.y + obj_in_area.h and
                                 (
-                                    (obj_in_area.x + obj_in_area.w <= obj.x + obj.w and obj_in_area.x + obj_in_area.w >= obj.x) or
-                                    (obj_in_area.x < int(obj.x + obj.w) and obj_in_area.x >= obj.x)
+                                    (obj_in_area.x + obj_in_area.w < obj.x + obj.w and obj_in_area.x + obj_in_area.w >= obj.x) or
+                                    (obj_in_area.x <= obj.x + obj.w and obj_in_area.x > obj.x)
                                 )
                             ):
+                                # print(obj_in_area.x, "<=", obj.x + obj.w, "and", obj_in_area.x, ">", obj.x, " | ", obj_in_area.x + obj_in_area.w, "<", obj.x + obj.w, "and", obj_in_area.x + obj_in_area.w, ">=", obj.x)
+                                print(" | ", obj_in_area.x + obj_in_area.w, "<", obj.x + obj.w, "and", obj_in_area.x + obj_in_area.w, ">=", obj.x)
                                 collisions['up'] = True
 
                             if obj.y <= obj_in_area.y:
@@ -114,14 +115,14 @@ class World:
                                 collisions['right'] = True
 
                             if (
-                                obj.x + obj.w >= obj_in_area.x and
+                                obj.x >= obj_in_area.x and
                                 (
-                                    (obj_in_area.y + obj_in_area.h <= obj.y + obj.h and obj_in_area.y + obj_in_area.h >= obj.y) or
-                                    (obj_in_area.y < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
+                                    (obj_in_area.y + obj_in_area.h <= int(obj.y + obj.h) and obj_in_area.y + obj_in_area.h >= obj.y) or
+                                    (obj_in_area.y + obj.speed < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
                                 )
                                 
-                            ):
-                                print(obj_in_area.x, "<=", obj.x + obj.w, "and", obj_in_area.x, ">=", obj.x)
+                            ):  
+                                # print(obj_in_area.y + obj_in_area.h, "<=", int(obj.y + obj.h) - obj.speed * 2, "and", obj_in_area.y + obj_in_area.h, ">=", obj.y)
                                 collisions['left'] = True
 
                             if collisions['up'] and obj.current_directions['up']:
