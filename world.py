@@ -92,14 +92,11 @@ class World:
                             #print("collision!!")
                             obj.is_colliding = True
 
-                            dx = obj.x - obj_in_area.x
-                            dy = obj.y - obj_in_area.y
-
                             if (
                                 obj.y >= obj_in_area.y and
                                 (
-                                    (obj_in_area.x + obj_in_area.w <= obj.x + obj.w and obj_in_area.x + obj_in_area.w >= obj.x) #or
-                                    #(obj_in_area.x < int(obj.x + obj.w) and obj_in_area.x >= obj.x)
+                                    (obj_in_area.x + obj_in_area.w <= obj.x + obj.w and obj_in_area.x + obj_in_area.w >= obj.x) or
+                                    (obj_in_area.x < int(obj.x + obj.w) and obj_in_area.x >= obj.x)
                                 )
                             ):
                                 collisions['up'] = True
@@ -107,7 +104,13 @@ class World:
                             if obj.y <= obj_in_area.y:
                                 collisions['down'] = True
 
-                            if obj.x <= obj_in_area.x:
+                            if (
+                                obj.x <= obj_in_area.x and
+                                (
+                                    (obj_in_area.y + obj_in_area.h <= obj.y + obj.h and obj_in_area.y + obj_in_area.h >= obj.y) or
+                                    (obj_in_area.y < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
+                                )
+                            ):
                                 collisions['right'] = True
 
                             if (
@@ -118,7 +121,7 @@ class World:
                                 )
                                 
                             ):
-                                print(obj_in_area.y, "<=", obj.y + obj.h, "and", obj_in_area.y, ">=", obj.y)
+                                print(obj_in_area.x, "<=", obj.x + obj.w, "and", obj_in_area.x, ">=", obj.x)
                                 collisions['left'] = True
 
                             if collisions['up'] and obj.current_directions['up']:
