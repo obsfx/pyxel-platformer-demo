@@ -16,7 +16,7 @@ class Game:
         self.world = World()
 
         self.current_tm = 0
-        self.tm_offsetX = 32
+        self.tm_offsetX = 16
         self.tm_offsetY = 0
 
         self.world.push(Player(30, 30, 8, 8))

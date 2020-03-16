@@ -11,7 +11,7 @@ class World:
     def __init__(self):
         self.qtree = []
         self.objects = deque()
-        self.gravity = 7
+        self.gravity = 0.15
 
         if config['debug'] and config['qtree_debug_area']:
             self.qtree_area = {
@@ -43,9 +43,9 @@ class World:
             obj.update()
 
             if obj.gravity:
-                if not obj.grounded:
-                    obj.dy += obj.acceleration
-                    obj.y += obj.dy * self.gravity
+                pass
+                obj.y += obj.dy
+                obj.dy += self.gravity
 
             self.qtree.insert(obj)
 
@@ -71,41 +71,71 @@ class World:
                 objects_in_area = self.qtree.query(col_check_area)
 
                 obj.is_colliding = False
+                obj.grounded = False
+
                 obj.collision_directions['up'] = False
                 obj.collision_directions['down'] = False
                 obj.collision_directions['right'] = False
                 obj.collision_directions['left'] = False
 
+                collisions = {
+                    'left': False,
+                    'right': False,
+                    'up': False,
+                    'down': False
+                }
+
+                
                 for obj_in_area in objects_in_area:
                     if (obj != obj_in_area and obj_in_area.id in obj.collision_list):
                         if AABB_collision(obj, obj_in_area):
                             #print("collision!!")
                             obj.is_colliding = True
 
+                            dx = obj.x - obj_in_area.x
+                            dy = obj.y - obj_in_area.y
 
-                            if obj.y >= obj_in_area.y and obj.current_directions['up']:
+                            if (
+                                obj.y >= obj_in_area.y and
+                                (
+                                    (obj_in_area.x + obj_in_area.w <= obj.x + obj.w and obj_in_area.x + obj_in_area.w >= obj.x) #or
+                                    #(obj_in_area.x < int(obj.x + obj.w) and obj_in_area.x >= obj.x)
+                                )
+                            ):
+                                collisions['up'] = True
+
+                            if obj.y <= obj_in_area.y:
+                                collisions['down'] = True
+
+                            if obj.x <= obj_in_area.x:
+                                collisions['right'] = True
+
+                            if (
+                                obj.x + obj.w >= obj_in_area.x and
+                                (
+                                    (obj_in_area.y + obj_in_area.h <= obj.y + obj.h and obj_in_area.y + obj_in_area.h >= obj.y) or
+                                    (obj_in_area.y < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
+                                )
+                                
+                            ):
+                                print(obj_in_area.y, "<=", obj.y + obj.h, "and", obj_in_area.y, ">=", obj.y)
+                                collisions['left'] = True
+
+                            if collisions['up'] and obj.current_directions['up']:
                                 obj.collision_directions['up'] = True
                                 print('up')
 
-                            if obj.y <= obj_in_area.y and obj.current_directions['down']:
+                            if collisions['down'] and obj.current_directions['down']:
                                 obj.collision_directions['down'] = True
                                 print('down')
 
-                            if obj.x <= obj_in_area.x and obj.current_directions['right']:
+                            if collisions['right'] and obj.current_directions['right']:
                                 obj.collision_directions['right'] = True
                                 print('right')
 
-                            if obj.x >= obj_in_area.x and obj.current_directions['left']:
+                            if collisions['left'] and obj.current_directions['left']:
                                 obj.collision_directions['left'] = True
                                 print('left')
-
-                            # for key in obj.current_directions.keys():
-                            #     if obj.current_directions[key]:
-                            #         obj.collision_directions[key] = True
-
-                            if obj.gravity and not obj.grounded:
-                                obj.y -= obj.y % 8
-                                obj.grounded = True
 
                             if obj.collision_directions['up'] and obj.y % 8 != 0:
                                 obj.y += 8 - (obj.y % 8)
@@ -118,6 +148,12 @@ class World:
 
                             if obj.collision_directions['left'] and obj.x % 8 != 0:
                                 obj.x += 8 - (obj.x % 8)
+
+                            if collisions['down']:
+                                if obj.gravity and not obj.grounded:
+                                    obj.y -= obj.y % 8
+                                    obj.dy -= obj.dy
+                                    obj.grounded = True
 
                 if config['qtree_debug_area']:
                     self.debug_founded_objs_in_area += objects_in_area

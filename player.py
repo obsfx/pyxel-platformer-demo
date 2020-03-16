@@ -16,7 +16,7 @@ class Player(Entity):
 
         self.speed = 2
         self.dy = 0.1
-        self.acceleration = 0.01
+        self.acceleration = 0.1
 
         self.collision_area = {
             'x': self.x - 14,
@@ -24,6 +24,13 @@ class Player(Entity):
             'w': 36,
             'h': 36
         }
+
+        # self.ground_area = {
+        #     'x': self.x,
+        #     'y': self.y + 6,
+        #     'w': 8,
+        #     'h': 6
+        # }
 
         self.collision_list = [
             'block1',
@@ -51,18 +58,27 @@ class Player(Entity):
             'down': False
         }
 
+        self.locked = {
+            'left': False,
+            'right': False,
+            'up': False,
+            'down': False
+        }
+
     def update(self):
         self.key_handling()
         # print(self.x, self.y)
         moved = False
 
-        if self.current_directions['up'] and not self.collision_directions['up']:
-            self.y -= self.speed
+        if self.current_directions['up'] and not self.collision_directions['up'] and self.grounded and not self.locked['up']:
+            # self.y -= self.speed
+            self.dy = -1.95
             moved = True
+            self.locked['up'] = True
 
-        if self.current_directions['down'] and not self.collision_directions['down']:
-            self.y += self.speed
-            moved = True
+        # if self.current_directions['down'] and not self.collision_directions['down']:
+        #     self.y += self.speed
+        #     moved = True
 
         if self.current_directions['right'] and not self.collision_directions['right']:
             self.x += self.speed
@@ -82,6 +98,9 @@ class Player(Entity):
         self.collision_area['x'] = self.x - 14
         self.collision_area['y'] = self.y - 14
 
+        # self.ground_area['x'] = self.x
+        # self.ground_area['y'] = self.y + 6
+
     def draw(self):
         pyxel.rect(self.x, self.y, self.w, self.h, 15)
         pyxel.text(self.x + self.w / 2, self.y + self.h / 2, str(self.x), 8)
@@ -96,12 +115,20 @@ class Player(Entity):
                 11
             )
 
+            # pyxel.rectb(
+            #     self.ground_area['x'], 
+            #     self.ground_area['y'], 
+            #     self.ground_area['w'], 
+            #     self.ground_area['h'], 
+            #     10
+            # )
+
     def key_handling(self):
         if pyxel.btn(pyxel.KEY_W):
             self.current_directions['up'] = True
 
-        if pyxel.btn(pyxel.KEY_S):
-            self.current_directions['down'] = True
+        # if pyxel.btn(pyxel.KEY_S):
+        #     self.current_directions['down'] = True
             
         if pyxel.btn(pyxel.KEY_D):
             self.current_directions['right'] = True
@@ -111,9 +138,10 @@ class Player(Entity):
 
         if pyxel.btnr(pyxel.KEY_W):
             self.current_directions['up'] = False
+            self.locked['up'] = False
 
-        if pyxel.btnr(pyxel.KEY_S):
-            self.current_directions['down'] = False
+        # if pyxel.btnr(pyxel.KEY_S):
+        #     self.current_directions['down'] = False
             
         if pyxel.btnr(pyxel.KEY_D):
             self.current_directions['right'] = False
