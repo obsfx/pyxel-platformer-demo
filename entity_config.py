@@ -8,6 +8,7 @@ e_config = {
 tmi = {
     'block1': 2,
     'block2': 3,
+    'ladderQ': 36,
     'ladderE': 35,
-    'ladderX': 34
+    'ladderB': 34
 }

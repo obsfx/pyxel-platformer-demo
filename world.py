@@ -43,7 +43,7 @@ class World:
         for obj in self.objects:
             obj.update()
 
-            if obj.gravity:
+            if obj.gravity and not obj.is_climbing:
                 obj.y += obj.dy
                 obj.dy += self.gravity
 
@@ -103,27 +103,27 @@ class World:
                             obj.is_colliding = True
                             
                             dx = obj.x - obj.sx - obj_in_area.x
-                            dy = obj.y - obj_in_area.y
+                            dy = obj.y - obj.dy - obj_in_area.y
 
                             deg = math.atan2(dy, dx) * (180 / math.pi) + 180
 
                             if deg >= 45 and deg <= 135:
-                                print('bottom')
+                                # print('bottom')
                                 collisions['down'] = True
 
                             if deg >= 225 and deg <= 315:
-                                print('top')
+                                # print('top')
                                 collisions['up'] = True
                                 obj.collision_directions['up'] = True
                                 obj.dy *= -1
                                 obj.y += obj.dy
 
                             if deg >= 135 and deg <= 225:
-                                print('left')
+                                # print('left')
                                 collisions['left'] = True
 
                             if (deg >= 0 and deg <= 45) or (deg >= 315 and deg <= 360):
-                                print('right')
+                                # print('right')
                                 collisions['right'] = True
 
                             # # print(obj.y, ">=", obj_in_area.y + obj_in_area.h - obj.dy)
@@ -196,6 +196,17 @@ class World:
                                     obj.y -= obj.y % 8
                                     obj.dy -= obj.dy
                                     obj.grounded = True
+
+                    if (obj != obj_in_area and obj_in_area.id in obj.overlap_list):
+                        dx = (obj.x + obj.w / 2) - obj.sx - (obj_in_area.x + obj_in_area.w / 2)
+                        dy = (obj.y + obj.h / 2) - obj.dy - (obj_in_area.y + obj_in_area.h / 2)
+
+                        dis = math.sqrt(dx * dx + dy * dy)
+                        # if (obj_in_area.id == "ladderQ"):
+                        #     print(dis)
+                        
+                        if dis < 11:
+                            obj.overlap_action(obj_in_area, dis)
 
                 if config['qtree_debug_area']:
                     self.debug_founded_objs_in_area += objects_in_area

@@ -16,7 +16,7 @@ class Game:
         self.world = World()
 
         self.current_tm = 0
-        self.tm_offsetX = 32
+        self.tm_offsetX = 0
         self.tm_offsetY = 0
 
         self.world.push(Player(30, 30, 8, 8))
@@ -58,7 +58,7 @@ class Game:
         #             self.world.push(Obj(j * 8, i * 8, 8, 8, get_key(tmi, d)[0]))
 
         # print(*tm, sep="\n")
-        print(pyxel.tilemap(0).get(5, 4))
+        print(pyxel.tilemap(0).get(0, 0))
         print(get_key(tmi, 35)[0])
 
         self.push_the_objects()
