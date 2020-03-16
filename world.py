@@ -112,12 +112,24 @@ class World:
                             obj.is_colliding = True
 
                             if (obj.id == 'Bullet'):
-                                create_particles(obj, 5)
-                                self.objects.remove(obj)
-                            
-                            dx = obj.x - obj.sx - obj_in_area.x
-                            dy = obj.y - obj.dy - obj_in_area.y
+                                pc = 5
+                                b = False
+                                
+                                if obj_in_area.id in globals.blood_p:
+                                    pc = 8
+                                    b = True
 
+                                create_particles(obj, pc * 2, pc, b)
+                                if obj in self.objects:
+                                    self.objects.remove(obj)
+                            
+                            # dx = obj.x - obj.sx - obj_in_area.x
+                            # dy = obj.y - obj.dy - obj_in_area.y
+
+                            dx = (obj.x + obj.w / 2) - obj.sx - (obj_in_area.x + obj_in_area.w / 2)
+                            dy = (obj.y + obj.h / 2) - obj.dy - (obj_in_area.y + obj_in_area.h / 2)
+
+                            dis = math.sqrt(dx * dx + dy * dy)
                             deg = math.atan2(dy, dx) * (180 / math.pi) + 180
 
                             if deg >= 45 and deg <= 135:
@@ -167,22 +179,21 @@ class World:
                                 if obj.gravity and not obj.grounded:
                                     if obj.id != 'Particle':
                                         obj.y -= obj.y % 8
-                                    else:
+                                    elif obj.id == 'Particle':
                                         obj.sx = 0
                                         obj.check_collision = False
                                         obj.gravity = False
+                                        #print(obj.id)
 
                                     obj.dy -= obj.dy
                                     obj.grounded = True
 
                     if (obj != obj_in_area and obj_in_area.id in obj.overlap_list):
-                        dx = (obj.x + obj.w / 2) - obj.sx - (obj_in_area.x + obj_in_area.w / 2)
-                        dy = (obj.y + obj.h / 2) - obj.dy - (obj_in_area.y + obj_in_area.h / 2)
-
-                        dis = math.sqrt(dx * dx + dy * dy)
                         # if (obj_in_area.id == "ladderQ"):
                         #     print(dis)
-                        
+                        dx = (obj.x + obj.w / 2) - obj.sx - (obj_in_area.x + obj_in_area.w / 2)
+                        dy = (obj.y + obj.h / 2) - obj.dy - (obj_in_area.y + obj_in_area.h / 2)
+                        dis = math.sqrt(dx * dx + dy * dy)
                         if dis < 11:
                             obj.overlap_action(obj_in_area, dis)
 

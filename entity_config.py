@@ -1,7 +1,8 @@
 e_config = {
     'types': {
         'player': 0,
-        'object': 1
+        'object': 1,
+        'enemy': 2
     }
 }
 

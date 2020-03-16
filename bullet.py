@@ -51,16 +51,22 @@ class Bullet(Obj):
             self.current_directions['left'] = True
         elif self.sx > 0:
             self.current_directions['right'] = True
-
     def update(self):
-        self.sx += -0.08
+        if self.current_directions['left']:
+            self.sx -= 0.25
+        else:
+            self.sx += 0.25
         self.x += self.sx
 
         self.collision_area['x'] = self.x - 7
         #self.collision_area['y'] = self.y - 14
     
     def draw(self):
-        pyxel.rect(self.x + globals.camX, self.y + globals.camY, self.w, self.h, self.col)
+        # pyxel.rect(self.x + globals.camX, self.y + globals.camY, self.w, self.h, self.col)
+        if self.current_directions['left']:
+            pyxel.blt(self.x + globals.camX, self.y + globals.camY, 0, 48, 0, 8, 8, 0)
+        else:
+            pyxel.blt(self.x + globals.camX, self.y + globals.camY, 0, 40, 0, 8, 8, 0)
 
         if config['qtree_debug_area']:
             pyxel.rectb(

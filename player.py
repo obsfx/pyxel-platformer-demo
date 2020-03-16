@@ -8,8 +8,8 @@ from bullet import Bullet
 from obj import Obj
 
 class Player(Obj):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h, 'Player')
+    def __init__(self, x, y, w, h, external_id='Player'):
+        super().__init__(x, y, w, h, external_id)
 
         self.type = e_config['types']['player']
         self.check_collision = True
@@ -18,6 +18,8 @@ class Player(Obj):
 
         self.is_colliding = False
         self.is_climbing = False
+
+        self.col = 15
 
         self.speed = 2
         self.dy = 0.1
@@ -77,6 +79,8 @@ class Player(Obj):
             'space': False
         }
 
+        self.d = -1
+
     def update(self):
         self.key_handling()
         # print(self.x, self.y)
@@ -96,14 +100,15 @@ class Player(Obj):
 
         if self.current_directions['right'] and not self.collision_directions['right']:
             self.sx = self.speed
+            self.d = 1
 
         if self.current_directions['left'] and not self.collision_directions['left']:
             self.sx = -self.speed
+            self.d = -1
 
         if self.pressed['space'] and not self.locked['space']:
             self.locked['space'] = True
-            globals.bullets.append(Bullet(self.x, self.y, -2.5, 2))
-            globals.shake_duration = 0.75
+            self.fire('Enemy')
 
         if not self.is_climbing:
             self.x += self.sx
@@ -113,9 +118,9 @@ class Player(Obj):
         self.collision_area['y'] = self.y - 14
 
     def draw(self):
-        pyxel.rect(self.x + globals.camX, self.y + globals.camY, self.w, self.h, 15)
-        pyxel.text(self.x + self.w / 2 + globals.camX, self.y + self.h / 2 + globals.camY, str(self.x), 8)
-        pyxel.text(self.x + self.w / 2 + globals.camX, self.y + self.h / 2 + 5 + globals.camY, str(self.y), 8)
+        pyxel.rect(self.x + globals.camX, self.y + globals.camY, self.w, self.h, self.col)
+        # pyxel.text(self.x + self.w / 2 + globals.camX, self.y + self.h / 2 + globals.camY, str(self.x), 8)
+        # pyxel.text(self.x + self.w / 2 + globals.camX, self.y + self.h / 2 + 5 + globals.camY, str(self.y), 8)
 
         if config['qtree_debug_area']:
             pyxel.rectb(
@@ -215,3 +220,9 @@ class Player(Obj):
                         self.x = obj.x
                         self.y = obj.y - obj.h / 3
                         self.is_climbing = True
+        
+    def fire(self, id):
+        bi = Bullet(self.x, self.y, self.d * 2.5, 2)
+        bi.collision_list.append(id)
+        globals.bullets.append(bi)
+        globals.shake_duration = 0.75

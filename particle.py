@@ -7,10 +7,14 @@ from config import config
 from obj import Obj
 
 class Particle(Obj):
-    def __init__(self, x, y, xvel, col):
+    def __init__(self, x, y, xvel, col, blood=True):
         super().__init__(x, y, 1, 1, 'Particle')
         self.sx = xvel
-        self.dy = -random.randint(10, 50) / 10
+
+        if blood:
+            self.dy = -random.randint(1, 25) / 10
+        else:
+            self.dy = -random.randint(10, 30) / 10
 
         self.col = col
 
@@ -50,17 +54,16 @@ class Particle(Obj):
             'down': False
         }
 
-        if self.sx < 0:
+        if self.sx > 0:
             self.current_directions['left'] = True
-        elif self.sx > 0:
+        elif self.sx < 0:
             self.current_directions['right'] = True
-
+        
     def update(self):
-        self.sx += self.current_directions['left'] if 0.2 else -0.2
         self.x += self.sx
 
         self.collision_area['x'] = self.x - 7
-        #self.collision_area['y'] = self.y - 14
+        self.collision_area['y'] = self.y - 7
     
     def draw(self):
         pyxel.rect(self.x + globals.camX, self.y + globals.camY, self.w, self.h, self.col)

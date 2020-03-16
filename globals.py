@@ -8,3 +8,5 @@ shake_duration = 1
 
 bullets = []
 particles = []
+
+blood_p = [ 'Player', 'Enemy' ]

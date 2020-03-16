@@ -1,5 +1,6 @@
 import globals
 import random
+import time
 
 from particle import Particle
 
@@ -35,7 +36,24 @@ def get_key(_dict, val):
 def get_sign(val):
     return val < 0 if -1 else 1
 
-def create_particles(obj, partc):
-    rdy = obj.current_directions['left'] if 1 else -1
+def create_particles(obj, partc, col, blood=False):
+    rdy = -1
+
+    px = obj.x
+
+    rm = 2
+    rx = 4
+
+    if obj.current_directions['left']:
+        rdy = 1
+        px += 4
+
+    if blood:
+        rdy *= -1
+        px = obj.x
+        rm = 1
+        rx = 30
+    random.seed(time.time())
+
     for x in range(partc):
-        globals.particles.append(Particle(obj.x - obj.sx, obj.y, rdy * random.randint(2, 5) / 10, 9))
+        globals.particles.append(Particle(px, obj.y, rdy * random.randint(rm, rx) / 10, col, True))
