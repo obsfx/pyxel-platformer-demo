@@ -1,4 +1,5 @@
 import pyxel
+import math
 
 from collections import deque
 
@@ -43,7 +44,6 @@ class World:
             obj.update()
 
             if obj.gravity:
-                pass
                 obj.y += obj.dy
                 obj.dy += self.gravity
 
@@ -88,61 +88,99 @@ class World:
                 
                 for obj_in_area in objects_in_area:
                     if (obj != obj_in_area and obj_in_area.id in obj.collision_list):
+                        
+                        # print(math.atan2(dy, dx) * (180 / math.pi) + 180)
+
+                        
+
+                        # left 45 - 0 360 - 315
+                        # bottom 315 - 225
+                        # right 225 - 135
+                        # top 135 - 45
+
                         if AABB_collision(obj, obj_in_area):
                             #print("collision!!")
                             obj.is_colliding = True
-                            if (
-                                obj.y >= obj_in_area.y + obj_in_area.h and
-                                (
-                                    (obj_in_area.x + obj_in_area.w < obj.x + obj.w and obj_in_area.x + obj_in_area.w >= obj.x) or
-                                    (obj_in_area.x <= obj.x + obj.w and obj_in_area.x > obj.x)
-                                )
-                            ):
-                                # print(obj_in_area.x, "<=", obj.x + obj.w, "and", obj_in_area.x, ">", obj.x, " | ", obj_in_area.x + obj_in_area.w, "<", obj.x + obj.w, "and", obj_in_area.x + obj_in_area.w, ">=", obj.x)
-                                print(" | ", obj_in_area.x + obj_in_area.w, "<", obj.x + obj.w, "and", obj_in_area.x + obj_in_area.w, ">=", obj.x)
-                                collisions['up'] = True
+                            
+                            dx = obj.x - obj.sx - obj_in_area.x
+                            dy = obj.y - obj_in_area.y
 
-                            if obj.y <= obj_in_area.y:
+                            deg = math.atan2(dy, dx) * (180 / math.pi) + 180
+
+                            if deg >= 45 and deg <= 135:
+                                print('bottom')
                                 collisions['down'] = True
 
-                            if (
-                                obj.x <= obj_in_area.x and
-                                (
-                                    (obj_in_area.y + obj_in_area.h <= obj.y + obj.h and obj_in_area.y + obj_in_area.h >= obj.y) or
-                                    (obj_in_area.y < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
-                                )
-                            ):
-                                collisions['right'] = True
+                            if deg >= 225 and deg <= 315:
+                                print('top')
+                                collisions['up'] = True
+                                obj.collision_directions['up'] = True
+                                obj.dy *= -1
+                                obj.y += obj.dy
 
-                            if (
-                                obj.x >= obj_in_area.x and
-                                (
-                                    (obj_in_area.y + obj_in_area.h <= int(obj.y + obj.h) and obj_in_area.y + obj_in_area.h >= obj.y) or
-                                    (obj_in_area.y + obj.speed < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
-                                )
-                                
-                            ):  
-                                # print(obj_in_area.y + obj_in_area.h, "<=", int(obj.y + obj.h) - obj.speed * 2, "and", obj_in_area.y + obj_in_area.h, ">=", obj.y)
+                            if deg >= 135 and deg <= 225:
+                                print('left')
                                 collisions['left'] = True
 
-                            if collisions['up'] and obj.current_directions['up']:
-                                obj.collision_directions['up'] = True
-                                print('up')
+                            if (deg >= 0 and deg <= 45) or (deg >= 315 and deg <= 360):
+                                print('right')
+                                collisions['right'] = True
+
+                            # # print(obj.y, ">=", obj_in_area.y + obj_in_area.h - obj.dy)
+                            # if (
+                            #     obj.y >= obj_in_area.y and
+                            #     (
+                            #         (obj_in_area.x + obj_in_area.w <= obj.x + obj.w and obj_in_area.x + obj_in_area.w > obj.x + obj.speed * 3) or
+                            #         (obj_in_area.x + obj.speed < obj.x + obj.w and obj_in_area.x > obj.x)
+                            #     )
+                            # ):
+                            #     print(obj_in_area.x + obj_in_area.w,"<=", obj.x + obj.w, "and", obj_in_area.x + obj_in_area.w, ">", obj.x + obj.speed * 3, " | ", obj_in_area.x + obj.speed, "<", obj.x + obj.w, "and", obj_in_area.x, ">", obj.x)
+                            #     #print(" | ", obj_in_area.x + obj_in_area.w, "<", obj.x + obj.w, "and", obj_in_area.x + obj_in_area.w, ">", obj.x + obj.speed)
+                            #     collisions['up'] = True
+                            #     obj.collision_directions['up'] = True
+                            #     obj.dy *= -1
+
+                            # if obj.y <= obj_in_area.y:
+                            #     collisions['down'] = True
+
+                            # if (
+                            #     obj.x <= obj_in_area.x and
+                            #     (
+                            #         (obj_in_area.y + obj_in_area.h <= obj.y + obj.h and obj_in_area.y + obj_in_area.h >= obj.y) or
+                            #         (obj_in_area.y < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
+                            #     )
+                            # ):
+                            #     collisions['right'] = True
+
+                            # if (
+                            #     obj.x >= obj_in_area.x and
+                            #     (
+                            #         (obj_in_area.y + obj_in_area.h <= int(obj.y + obj.h) and obj_in_area.y + obj_in_area.h >= obj.y) or
+                            #         (obj_in_area.y + obj.speed < int(obj.y + obj.h) and obj_in_area.y >= obj.y)
+                            #     )
+                                
+                            # ):  
+                            #     # print(obj_in_area.y + obj_in_area.h, "<=", int(obj.y + obj.h) - obj.speed * 2, "and", obj_in_area.y + obj_in_area.h, ">=", obj.y)
+                            #     collisions['left'] = True
+
+                            # if collisions['up'] and obj.current_directions['up']:
+                                
+                            #     print('up')
 
                             if collisions['down'] and obj.current_directions['down']:
                                 obj.collision_directions['down'] = True
-                                print('down')
+                                # print('down')
 
                             if collisions['right'] and obj.current_directions['right']:
                                 obj.collision_directions['right'] = True
-                                print('right')
+                                # print('right')
 
                             if collisions['left'] and obj.current_directions['left']:
                                 obj.collision_directions['left'] = True
-                                print('left')
+                                # print('left')
 
                             if obj.collision_directions['up'] and obj.y % 8 != 0:
-                                obj.y += 8 - (obj.y % 8)
+                                obj.y += obj.dy
 
                             if obj.collision_directions['down'] and obj.y % 8 != 0:
                                 obj.y -= obj.y % 8

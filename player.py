@@ -18,6 +18,9 @@ class Player(Entity):
         self.dy = 0.1
         self.acceleration = 0.1
 
+        self.sx = 0
+        self.sy = 0
+
         self.collision_area = {
             'x': self.x - 14,
             'y': self.y - 14,
@@ -68,12 +71,12 @@ class Player(Entity):
     def update(self):
         self.key_handling()
         # print(self.x, self.y)
-        moved = False
+
+        self.sx = 0
 
         if self.current_directions['up'] and not self.collision_directions['up'] and self.grounded and not self.locked['up']:
             # self.y -= self.speed
             self.dy = -1.95
-            moved = True
             self.locked['up'] = True
 
         # if self.current_directions['down'] and not self.collision_directions['down']:
@@ -81,13 +84,12 @@ class Player(Entity):
         #     moved = True
 
         if self.current_directions['right'] and not self.collision_directions['right']:
-            self.x += self.speed
-            moved = True
+            self.sx = self.speed
 
         if self.current_directions['left'] and not self.collision_directions['left']:
-            self.x -= self.speed
-            moved = True
+            self.sx = -self.speed
 
+        self.x += self.sx
         # if moved:
         #     if self.is_colliding:
         #         for key in self.current_directions.keys():
