@@ -112,7 +112,7 @@ class World:
                                 collisions['down'] = True
 
                             if deg >= 225 and deg <= 315:
-                                # print('top')
+                                print('top')
                                 collisions['up'] = True
                                 obj.collision_directions['up'] = True
                                 obj.dy *= -1

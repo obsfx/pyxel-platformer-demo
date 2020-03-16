@@ -174,7 +174,7 @@ class Player(Entity):
             self.locked['e'] = False
 
     def overlap_action(self, obj, dis):
-        print(obj.id)
+        # print(obj.id)
         # ladderQ
         if obj.id == 'ladderQ':
             if self.pressed['e'] and not self.locked['e']:
@@ -204,10 +204,13 @@ class Player(Entity):
             if self.pressed['e'] and not self.locked['e']:
                 self.locked['e'] = True
                 if self.is_climbing:
+                    self.collision_list.append('ladderQ')
+                    self.toggle_overlaps['ladderQ'] = True
                     self.is_climbing = False
                 else:
-                    if dis < 6:
+                    if dis < 4:
+                        self.collision_list.remove('ladderQ')
+                        self.toggle_overlaps['ladderQ'] = False
                         self.x = obj.x
                         self.y = obj.y - obj.h / 3
                         self.is_climbing = True
-                
