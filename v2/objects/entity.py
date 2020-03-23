@@ -5,7 +5,8 @@ class Entity(Rectangle):
         super().__init__(x, y, w, h)
 
         self.active = True
-        self.collisions = True
+        self.collision = True
+        self.overlap = False
         self.dynamic_entity = False
         self.gravity = False
 

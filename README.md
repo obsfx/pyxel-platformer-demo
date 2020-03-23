@@ -7,3 +7,7 @@ My demo playground to implement and understand ;
 - particles
 
 ![](https://raw.githubusercontent.com/obsfx/pyxel-platformer-demo/master/demo.gif)
+
+### V2 TODO ://
+    -> fix corner collision issue for different sized rectangles
+    -> customizeable collision directions

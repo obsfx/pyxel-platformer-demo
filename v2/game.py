@@ -17,7 +17,7 @@ class Game:
 
         self.entities += self.map.get_blocks()
         
-        self.entities.append(Player(9, 9, 8, 8))
+        self.entities.append(Player(8, 8, 8, 12))
     def update(self):
         if globs.camera.duration > 0:
             globs.camera.duration -= 1

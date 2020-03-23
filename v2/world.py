@@ -33,25 +33,27 @@ class World:
                 bottom = False
 
                 for entity_ica in entities_in_collision_area:
-                    if entity != entity_ica:
+                    if entity != entity_ica and (entity_ica.collision or entity_ica.overlap):
 
                         if collision.check(entity, entity_ica):
-                            resolved_collision = collision.resolve(entity, entity_ica)
+                            if entity_ica.collision:
+                                resolved_collision = collision.resolve(entity, entity_ica)
 
-                            entity.x = resolved_collision.x
-                            entity.y = resolved_collision.y
+                                entity.x = resolved_collision.x
+                                entity.y = resolved_collision.y
 
-                            if resolved_collision.left:
-                                left = True
+                                if resolved_collision.left:
+                                    left = True
 
-                            if resolved_collision.right:
-                                right = True
+                                if resolved_collision.right:
+                                    right = True
 
-                            if resolved_collision.top:
-                                top = True
+                                if resolved_collision.top:
+                                    top = True
 
-                            if resolved_collision.bottom:
-                                bottom = True
+                                if resolved_collision.bottom:
+                                    bottom = True
+                                
                 print(left, right, top, bottom)
 
                 entity.left_collided = left
