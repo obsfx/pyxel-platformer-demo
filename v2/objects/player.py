@@ -33,6 +33,12 @@ class Player(Rectangle):
         if pyxel.btnp(pyxel.KEY_W):
             self.dy = -2
 
+        # if pyxel.btn(pyxel.KEY_W):
+        #     self.y -= 1
+
+        # if pyxel.btn(pyxel.KEY_S):
+        #     self.y += 1
+
         if pyxel.btn(pyxel.KEY_A):
             self.x -= 1
 

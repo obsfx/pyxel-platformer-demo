@@ -8,6 +8,7 @@ import globs.camera
 from world import World
 from tilemap import TileMap
 from objects.player import Player
+from objects.entity import Entity
 
 class Game:
     def __init__(self):
@@ -17,7 +18,9 @@ class Game:
 
         self.entities += self.map.get_blocks()
         
-        self.entities.append(Player(8, 8, 8, 12))
+        self.entities.append(Player(8, 12, 8, 12))
+
+        # self.entities.append(Entity(16, 20, 8, 8))
     def update(self):
         if globs.camera.duration > 0:
             globs.camera.duration -= 1
@@ -30,3 +33,5 @@ class Game:
 
         for entity in self.entities:
             entity.draw()
+
+        # pyxel.rect(16, 20, 8, 8, 8)

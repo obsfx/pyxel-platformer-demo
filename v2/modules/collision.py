@@ -63,7 +63,16 @@ def resolve(A, B):
 
     normalized_abs_dx = abs(abs_dx - ref_abs_dx)
     normalized_abs_dy = abs(abs_dy - ref_abs_dy)
-    normalized_abs_dxy = abs(abs_dxy - ref_abs_dxy)
+    normalized_abs_dxy = abs(abs_dxy + ref_abs_dxy)
+
+    print("-----------------------------------")
+    print("ref_abs_dxy", ref_abs_dxy)
+    print("abs_dxy", abs_dxy)
+    print("normalized_dxy", normalized_abs_dxy)
+    print("ref_dx", ref_abs_dx)
+    print("ref_dy", ref_abs_dy)
+    print("abs_dx", abs_dx)
+    print("abs_dy", abs_dy)
 
     if normalized_abs_dxy < 0.1:
         if dx < 0:

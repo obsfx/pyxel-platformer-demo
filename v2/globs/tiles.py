@@ -15,22 +15,22 @@ data = {
     '2': '',
     '3': {
         'hitbox_w': 8,
-        'hitbox_h': 8
+        'hitbox_h': 3
     },
     '4': '',
     '64': '',
     '68': '',
     '161': {
         'hitbox_w': 8,
-        'hitbox_h': 8
+        'hitbox_h': 1
     },
     '162': {
         'hitbox_w': 8,
-        'hitbox_h': 8
+        'hitbox_h': 1
     },
     '163': {
         'hitbox_w': 8,
-        'hitbox_h': 8
+        'hitbox_h': 1
     }
 }
 

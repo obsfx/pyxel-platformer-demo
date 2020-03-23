@@ -53,8 +53,8 @@ class World:
 
                                 if resolved_collision.bottom:
                                     bottom = True
-                                
-                print(left, right, top, bottom)
+
+                # print("left", left, "right", right, "top", top, "bottom", bottom)           
 
                 entity.left_collided = left
                 entity.right_collided = right
