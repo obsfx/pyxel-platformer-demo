@@ -26,33 +26,24 @@ class Player(Rectangle):
         self.bottom_collided = False
 
     def update(self):
-        # if pyxel.btn(pyxel.KEY_W):
-        #     self.y -= 1
-
         if self.bottom_collided:
-            self.dy = 0
-            self.grounded = True
-            
+            self.dy -= self.dy
+            # self.grounded = True
+        
+        if pyxel.btnp(pyxel.KEY_W):
+            self.dy = -2
+
         if pyxel.btn(pyxel.KEY_A):
             self.x -= 1
 
         if pyxel.btn(pyxel.KEY_D):
             self.x += 1
 
-        if not self.grounded:
-            self.y += self.dy
+        # if not self.grounded:
+        self.y += self.dy
 
         self.collision_check_area.x = self.x - (self.w * 3 / 2 - self.w / 2)
         self.collision_check_area.y = self.y - (self.h * 3 / 2 - self.h / 2)
 
     def draw(self):
         pyxel.rect(self.x, self.y, self.w, self.h, 7)
-
-    def set_resolved(self, resolved_collision):
-        self.x = resolved_collision.x
-        self.y = resolved_collision.y
-
-        self.left_collided = resolved_collision.left
-        self.right_collided = resolved_collision.right
-        self.top_collided = resolved_collision.top
-        self.bottom_collided = resolved_collision.bottom
