@@ -1,4 +1,4 @@
-class CollisionResolve:
+class CollisionResolution:
     def __init__(self, x, y, left, right, top, bottom):
         self.x = x
         self.y = y
@@ -35,7 +35,7 @@ def check(A, B, include_borders=False):
         return True
 
 def resolve(A, B):
-    resolve = CollisionResolve(
+    resolve = CollisionResolution(
         A.x, 
         A.y,
         left=False,
