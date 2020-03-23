@@ -68,16 +68,16 @@ def resolve(A, B):
     if normalized_abs_dxy < 0.1:
         if dx < 0:
             resolve.x = B.x - A.w
-            resolve.right = True
+            #resolve.right = True
         else:
             resolve.x = B.x + B.w
-            resolve.left = True
+            #resolve.left = True
         if dy < 0:
             resolve.y = B.y - A.h
-            resolve.bottom = True
+            #resolve.bottom = True
         else:
             resolve.y = B.y + B.h
-            resolve.top = True
+            #resolve.top = True
     elif normalized_abs_dx < normalized_abs_dy:
         if dx < 0:
             resolve.x = B.x - A.w
