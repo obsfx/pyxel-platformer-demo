@@ -16,7 +16,7 @@ class World:
         self.qtree = QTree(0, 0, self.width, self.height, 4)
         
         for entity in entities:
-            if entity.gravity:
+            if entity.gravity and not entity.grounded:
                 entity.dy += self.gravity
 
             entity.update()
@@ -26,12 +26,11 @@ class World:
         for entity in entities:
             if entity.dynamic_entity:
                 entities_in_collision_area = self.qtree.query(entity.collision_check_area)
-                
                 for entity_ica in entities_in_collision_area:
-                    if collision.check(entity, entity_ica):
-                        new_entity_pos = collision.resolve(entity, entity_ica)
-
-                        entity.x = new_entity_pos[0]
-                        entity.y = new_entity_pos[1]
+                    if entity != entity_ica:
+                        if collision.check(entity, entity_ica):
+                            resolved_collision = collision.resolve(entity, entity_ica)
+                            # print(resolved_collision.left, resolved_collision.right, resolved_collision.top, resolved_collision.bottom)
+                            entity.set_resolved(resolved_collision)
 
         return entities

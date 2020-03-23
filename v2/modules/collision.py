@@ -1,3 +1,12 @@
+class CollisionResolve:
+    def __init__(self, x, y, left, right, top, bottom):
+        self.x = x
+        self.y = y
+        self.left = left
+        self.right = right
+        self.top = top
+        self.bottom = bottom
+
 def check(A, B, include_borders=False):
     l1 = A.get_left()
     r1 = A.get_right()
@@ -26,7 +35,14 @@ def check(A, B, include_borders=False):
         return True
 
 def resolve(A, B):
-    new_pos = [ A.x, A.y ]
+    resolve = CollisionResolve(
+        A.x, 
+        A.y,
+        left=False,
+        right=False,
+        top=False,
+        bottom=False
+    )
 
     deltas = get_deltas(A, B)
 
@@ -51,27 +67,34 @@ def resolve(A, B):
 
     if normalized_abs_dxy < 0.1:
         if dx < 0:
-            new_pos[0] = B.x - A.w
+            resolve.x = B.x - A.w
+            resolve.right = True
         else:
-            new_pos[0] = B.x + B.w
-
+            resolve.x = B.x + B.w
+            resolve.left = True
         if dy < 0:
-            new_pos[1] = B.y - A.h
+            resolve.y = B.y - A.h
+            resolve.bottom = True
         else:
-            new_pos[1] = B.y + B.h
+            resolve.y = B.y + B.h
+            resolve.top = True
     elif normalized_abs_dx < normalized_abs_dy:
         if dx < 0:
-            new_pos[0] = B.x - A.w
+            resolve.x = B.x - A.w
+            resolve.right = True
         else:
-            new_pos[0] = B.x + B.w
+            resolve.x = B.x + B.w
+            resolve.left = True
     else:
         if dy < 0:
-            new_pos[1] = B.y - A.h
+            resolve.y = B.y - A.h
+            resolve.bottom = True
         else:
-            new_pos[1] = B.y + B.h
+            resolve.y = B.y + B.h
+            resolve.top = True
 
 
-    return new_pos
+    return resolve
 
 def get_deltas(A, B):
     midx1 = A.get_mid_x()
