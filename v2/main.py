@@ -12,8 +12,6 @@ class App:
             caption=globs.config.caption,
             fps=globs.config.fps,
             scale=globs.config.scale,
-            border_width=0,
-            border_color=0
         )
 
         pyxel.mouse(globs.config.mouse)

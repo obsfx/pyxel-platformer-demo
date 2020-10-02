@@ -11,8 +11,6 @@ class App:
             caption=config['caption'], 
             fps=config['fps'], 
             scale=config['scale'], 
-            border_width=0, 
-            border_color=0
         )
 
         pyxel.load('assets/assets.pyxres')
